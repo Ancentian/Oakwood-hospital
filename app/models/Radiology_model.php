@@ -27,6 +27,28 @@ class Radiology_model extends CI_Model
         return $query->result_array();
     }
 
+    function fetch_radiology_sonography()
+    {
+        $this->db->where('radiology_categories.cat_name=', 'Sonography');
+        $this->db->select('radiology_screening.*, radiology_categories.id as radcatid, radiology_categories.cat_name');
+        $this->db->from('radiology_screening');
+        $this->db->join('radiology_categories', 'radiology_categories.id=radiology_screening.cat_id');
+        $this->db->order_by('radiology_screening.id', 'DESC');
+        $query = $this->db->get();
+        return $query->result_array();
+    }
+
+    function fetch_radiology_xRay()
+    {
+        $this->db->where('radiology_categories.cat_name=', 'X-Ray');
+        $this->db->select('radiology_screening.*, radiology_categories.id as radcatid, radiology_categories.cat_name');
+        $this->db->from('radiology_screening');
+        $this->db->join('radiology_categories', 'radiology_categories.id=radiology_screening.cat_id');
+        $this->db->order_by('radiology_screening.id', 'DESC');
+        $query = $this->db->get();
+        return $query->result_array();
+    }
+
     function fetch_radiology_categories()
     {
         $this->db->select()->from('radiology_categories');

@@ -30,6 +30,8 @@ class Radiology extends BASE_Controller
     function index()
     {
         $this->data['tests'] = $this->radiology_model->fetch_radiology_screening();
+        $this->data['sonography'] = $this->radiology_model->fetch_radiology_sonography();
+        $this->data['xray'] = $this->radiology_model->fetch_radiology_xRay();
         $this->data['pg_title'] = "Radiology";
         $this->data['page_content'] = 'radiology/index';
         $this->load->view('layout/template', $this->data);

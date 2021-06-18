@@ -11,7 +11,7 @@
                 <?php } ?>
                 <div class="main-card mb-3 card">
                     <div class="card-header"><i class="header-icon lnr-license icon-gradient bg-plum-plate"> </i>RADIOLOGY
-                        <div class="btn-actions-pane-right" hidden="">
+                        <div class="btn-actions-pane-right" >
                             <div class="nav">
                                 <a data-toggle="tab" href="#all"
                                    class="btn-pill btn-wide active btn btn-outline-alternate btn-sm">ALL</a>
@@ -70,7 +70,7 @@
                             </thead>
                             <tbody>
 
-                            <?php $i = 1;  foreach($tests as $one) { if($one['cat_name'] == 'X-Ray') ?>
+                            <?php $i = 1;  foreach($xray as $one) { ?>
                                 <tr>
                                     <th scope="row"><?php echo $i; ?></th>
                                     <td><?php echo $one['name']; ?></td>
@@ -101,7 +101,7 @@
                             </thead>
                             <tbody>
 
-                            <?php $i = 1; foreach($tests as $one) { if($one['cat_name'] == 'Sonography') ?>                               
+                            <?php $i = 1; foreach($sonography as $one) { ?>                               
                                 <tr>
                                     <th scope="row"><?php echo $i; ?></th>
                                     <td><?php echo $one['name']; ?></td>

@@ -67,7 +67,7 @@
                                 <div class="col-sm-6 position-relative form-group" >
                                         <label for="chkPassport" >
                                             <input type="checkbox" name="rsb" value="100" id="chkPassport" />
-                                            RSB <small>(If checked Patient will be charged Ksh. 100/-) </small>
+                                            RBS <small>(If checked Patient will be charged Ksh. 100/-) </small>
                                         </label>
                                     </div>
                                     <div id="dvPassport" class="row col-md-12" style="display: none">
