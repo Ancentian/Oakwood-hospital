@@ -90,13 +90,20 @@
         $this->pheight = 0;
 
         $this->pheight = $this->pheight + 8;
-        echo '<tr>
-            <td colspan="2"><b>' . $receipt['mode'] . '</b></td>
-             <td><b> Ksh ' . $receipt['amount']. '</b></td>
+        $mode = json_decode($receipt['mode']);
+        $amt = json_decode($receipt['amnt']);
+        
+        $i=0;
+        foreach($mode as $one){
+            $onemode = $one;
+            $oneamt = $amt[$i];
             
-        </tr>';
+             echo '<tr>
+                <td colspan="2"><b>' . $onemode . '</b></td>
+                 <td><b> Ksh ' . $oneamt. '</b></td>
+                </tr>';
         ?>
-        <?php if($receipt['mode'] == "mpesa"){
+        <?php if($onemode == "mpesa"){
              echo '<tr>
             <td colspan="2"><small>Phone No:</small></td>
              <td><small>' . $receipt['phone_no']. '</small></td>
@@ -110,7 +117,7 @@
         ?>
             
         <?php } ?>
-         <?php if($receipt['mode'] == "insurance"){
+         <?php if($onemode == "insurance"){
              echo '<tr>
             <td colspan="2"><small>Company:</small></td>
              <td><small>' . $receipt['insurance_company']. '</small></td>
@@ -128,7 +135,11 @@
         </tr><tr><td colspan="3">&nbsp;</td></tr>';
         ?>
             
-        <?php } ?>
+        <?php }
+        
+        $i++;
+            }
+        ?>
     </table>
     <hr>
    

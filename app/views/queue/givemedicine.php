@@ -1,3 +1,4 @@
+<?php //var_dump($prescriptions);die; ?>
 <div class="app-main__outer">
     <div class="app-main__inner">
 
@@ -42,7 +43,7 @@
                                 <label for="exampleEmail" class="col-sm-1 col-form-label"><?php echo $one['qty'];?></label>
                                 <label for="exampleEmail" class="col-sm-1 col-form-label"><?php echo $one['cost'];?></label>
                                 <label for="exampleEmail" class="col-sm-2 col-form-label"><?php echo $one['units']*$one['cost'];?></label>
-                                <label for="exampleEmail" class="col-sm-1 col-form-label"><a href="<?php echo base_url(); ?>queue/delete_medication/<?php echo $one['id'];?>/<?php echo $ticket_id;?>/<?php echo $mvtid;?>"><i class="fa fa-fw icon-danger"></i></a></label>
+                                <label for="exampleEmail" class="col-sm-1 col-form-label"><a href="<?php echo base_url(); ?>queue/delete_medication/<?php echo $one['id'];?>/<?php echo $ticket_id;?>/<?php echo $mvtid;?>/<?php echo $is_direct;?>"><i class="fa fa-fw icon-danger"></i></a></label>
                             </div>
                         <?php } ?>
                             <hr>

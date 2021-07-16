@@ -34,23 +34,23 @@
                         <?php if (sizeof($triage)>0){?>
                             <div class="card-body"><h5 class="card-title">TRIAGE DETAILS</h5>
                                 <hr>
-
+                                <form class="" method="post" action="<?php echo base_url('queue/updateTriage/'. $triage[0]['id']) ?>">
                                 <div class="row">
                                     <div class="position-relative row form-group col-sm-6"><label for="exampleEmail"                                                                              class="col-sm-4 col-form-label">Weight(Kgs)</label>
                                         <div class="col-sm-8"><input name="weight" placeholder="" type="text"
                                                                      class="form-control"
                                                                      value="<?php echo $triage[0]['weight']; ?> kgs"
-                                                                     disabled></div>
+                                                                     ></div>
                                     </div>
                                     <div class="position-relative row form-group col-sm-6"><label for="exampleEmail"                                                                              class="col-sm-4 col-form-label">Height(cm)</label>
                                         <div class="col-sm-8"><input name="height" placeholder="" type="text"
                                                                      class="form-control"
                                                                      value="<?php echo $triage[0]['height']; ?> cm"
-                                                                     disabled></div>
+                                                                     ></div>
                                     </div>
                                     <div class="position-relative row form-group col-sm-6"><label for="exampleEmail"                                                                              class="col-sm-4 col-form-label">Temperature</label>
                                         <div class="col-sm-8"><input name="temperature" placeholder="" type="text" class="form-control" value="<?php echo $triage[0]['temperature']; ?>" style="<?php if($triage[0]['temperature'] > '37' || $triage[0]['temperature'] < '36'){?> color: red;border: 1px solid red; <?php } ?>"
-                                                                     disabled></div>
+                                                                     ></div>
                                     </div>
                                     <div class="position-relative row form-group col-sm-6"><label for="exampleEmail" class="col-sm-4 col-form-label">Blood
                                             Pressure</label>
@@ -62,47 +62,59 @@
                                         <div class="col-sm-8"><input name="blood_pressure" placeholder="" type="text" style="<?php if($hbp > '120' || $lbp < '80'){?> color: red;border: 1px solid red; <?php } ?>"
                                                                      class="form-control"
                                                                      value="<?php echo $triage[0]['blood_pressure']; ?>"
-                                                                     disabled></div>
+                                                                     ></div>
                                     </div>
                                     <div class="position-relative row form-group col-sm-6"><label for="exampleEmail"                                                                                              class="col-sm-4 col-form-label">SPO2</label>
                                         <div class="col-sm-8"><input name="spo2" placeholder="" type="text"
                                                                      class="form-control"
-                                                                     value="<?php echo $triage[0]['spo2']; ?>" style="<?php if($triage[0]['spo2'] < '90'){?> color: red;border: 1px solid red; <?php } ?>" disabled>
+                                                                     value="<?php echo $triage[0]['spo2']; ?>" style="<?php if($triage[0]['spo2'] < '90'){?> color: red;border: 1px solid red; <?php } ?>" >
                                         </div>
                                     </div>
                                     <div class="position-relative row form-group col-sm-6"><label for="exampleEmail" class="col-sm-4 col-form-label">Pulse Rate</label>
-                                        <div class="col-sm-8"><input name="resp_rate" placeholder="" type="text" class="form-control" value="<?php echo $triage[0]['resp_rate']; ?>" style="<?php if($triage[0]['resp_rate'] > '25' || $triage[0]['resp_rate'] < '12'){?> color: red;border: 1px solid red; <?php } ?>" disabled>
+                                        <div class="col-sm-8"><input name="resp_rate" placeholder="" type="text" class="form-control" value="<?php echo $triage[0]['resp_rate']; ?>" style="<?php if($triage[0]['resp_rate'] > '25' || $triage[0]['resp_rate'] < '12'){?> color: red;border: 1px solid red; <?php } ?>" >
                                         </div>
 
 
                                     </div>
-                                    <div class="position-relative row form-group col-sm-6"><label for="exampleEmail"                                                                                              class="col-sm-4 col-form-label">RSB</label>
+                                    <div class="position-relative row form-group col-sm-6"><label for="exampleEmail"                                                                                              class="col-sm-4 col-form-label">RBS</label>
                                         <div class="col-sm-8"><input name="rsb_reading" placeholder="" type="text"
                                                                      class="form-control"
-                                                                     value="<?php echo $triage[0]['rsb_reading'] ?>" disabled>
+                                                                     value="<?php echo $triage[0]['rsb_reading'] ?>" >
                                         </div>
                                     </div>
+                                    <div class="position-relative row form-group col-sm-6" hidden=""><label for="exampleEmail"                                                                                              class="col-sm-4 col-form-label">Ticket ID</label>
+                                        <div class="col-sm-8"><input name="ticket_id" placeholder="" type="text"
+                                                                     class="form-control"
+                                                                     value="<?php echo $triage[0]['ticket_id'] ?>" >
+                                        </div>
+                                    </div>
+                                    <input name="mvtid" placeholder="" type="hidden"class="form-control" value="<?php echo $mvtid; ?>" >
                                 </div>
+                                <!-- <input type="" name=""> -->
+                                <div class="col-sm-10 offset-sm-2">
+                                        <button class="btn btn-success">UPDATE</button>
+                                </div>
+                            </form>
                             </div>
                             <?php } if (sizeof($diagnosisdetails) > 0) { ?>
                                 <div class="card-body"><h5 class="card-title">DIAGNOSIS DETAILS</h5><hr>
                                     <div class="row">
                                         <div class="position-relative row form-group col-sm-12">
                                             <div class="col-sm-2">Clinical History</div>
-                                            <div class="col-sm-10"><textarea name="clinical_history" class="form-control" rows="3" disabled><?php echo $diagnosisdetails[0]['clinical_history']; ?></textarea>
+                                            <div class="col-sm-10"><textarea name="clinical_history" class="form-control" rows="3"><?php echo $diagnosisdetails[0]['clinical_history']; ?></textarea>
                                             </div>
                                         </div>
 
                                         <div class="position-relative row form-group col-sm-12">
                                             <div class="col-sm-2">Physical Findings</div>
-                                            <div class="col-sm-10"><textarea name="physical_findings" class="form-control" rows="3" disabled><?php echo $diagnosisdetails[0]['physical_findings']; ?></textarea>
+                                            <div class="col-sm-10"><textarea name="physical_findings" class="form-control" rows="3"><?php echo $diagnosisdetails[0]['physical_findings']; ?></textarea>
                                             </div>
 
                                         </div>
 
                                         <div class="position-relative row form-group col-sm-12">
                                             <div class="col-sm-2">Impressions & Diagnosis</div>
-                                            <div class="col-sm-10"><textarea name="diagnosis" class="form-control" rows="3" disabled><?php echo $diagnosisdetails[0]['diagnosis']; ?></textarea>
+                                            <div class="col-sm-10"><textarea name="diagnosis" class="form-control" rows="3"><?php echo $diagnosisdetails[0]['diagnosis']; ?></textarea>
                                             </div>
 
                                         </div>
@@ -172,20 +184,20 @@
                                             <div class="col-sm-8"><input name="weight" placeholder="" type="text"
                                                                          class="form-control"
                                                                          value="<?php echo $admissiondetails['name']; ?>"
-                                                                         disabled></div>
+                                                                         ></div>
                                         </div>
                                         <div class="position-relative row form-group col-sm-6"><label for="exampleEmail"                                                                                              class="col-sm-4 col-form-label">Cost</label>
                                             <div class="col-sm-8"><input name="height" placeholder="" type="text"
                                                                          class="form-control"
                                                                          value="Ksh <?php echo $admissiondetails['cost']; ?>"
-                                                                         disabled></div>
+                                                                         ></div>
                                         </div>
                                         <div class="position-relative row form-group col-sm-6"><label for="exampleEmail"                                                                                              class="col-sm-4 col-form-label">Admission
                                                 Date</label>
                                             <div class="col-sm-8"><input name="temperature" placeholder="" type="text"
                                                                          class="form-control"
                                                                          value="<?php echo date('Y-m-d H:i', strtotime($admissiondetails['admission_time'])); ?>"
-                                                                         disabled></div>
+                                                                         ></div>
                                         </div>
                                         <div class="position-relative row form-group col-sm-6"><label for="exampleEmail"                                                                                              class="col-sm-4 col-form-label">Status</label>
                                             <label for="exampleEmail"                                           class="col-sm-8 col-form-label"><?php if ($admissiondetails['status'] == "admitted") { ?>

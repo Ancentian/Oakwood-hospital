@@ -1,4 +1,5 @@
 <?php $userdata = $this->session->userdata('user_aob'); ?>
+<?php //var_dump($special);die; ?>
 <div class="app-main__outer">
     <div class="app-main__inner">
 
@@ -35,6 +36,7 @@
                                             <option value="">--Choose one</option>
                                             <option value="0">Zero consultation fee</option>
                                             <option value="100">Normal consultation fee</option>
+                                            <option value="<?php echo $special['special_fee'];?>">Special consultation fee</option>
                                         </select>
                                     </div>
                                 </div>

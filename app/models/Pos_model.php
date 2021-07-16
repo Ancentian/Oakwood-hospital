@@ -39,7 +39,10 @@ class Pos_model extends CI_Model
             $invoices = $this->getInvoices($pid)['invoices'];
             $invoicesCost = $this->getInvoices($pid)['cost'];
             $invPaid = $this->invPaid($pid);
-            
+
+            $ticketdetails = $this->getTicketdetails($pid);
+            //var_dump($ticketdetails);die;
+            $consfee = $ticketdetails['cons_fee'];            
             
             $tot = 0;
             $totpaid = 0;
@@ -49,8 +52,9 @@ class Pos_model extends CI_Model
                 $radcost = $this->getRad($tickets);
                 $medcost = $this->getMed($tickets);
                 $totmisc = $this->getMisc($tickets);
+                $totrbs = $this->getRbs($tickets);
 
-                $totbill += $labcost+$radcost+$medcost+$totmisc+$this->CONS_FEE+$invoicesCost;
+                $totbill += $labcost+$radcost+$medcost+$totmisc+$totrbs+$consfee+$invoicesCost;
                 $totpaid += $this->getPayments($tickets);
 
                 
@@ -118,6 +122,13 @@ class Pos_model extends CI_Model
         }
 
         return $tickids;
+    }
+
+    public function getTicketdetails($pid)
+    {
+        $this->db->where('patient_id',$pid);
+        $query = $this->db->get('tickets');
+        return $query->result_array()[0];
     }
 
     public function getLab($tick)
@@ -228,6 +239,20 @@ class Pos_model extends CI_Model
     {
         $this->db->where_in('ticket_id',$tick);
         $this->db->select_sum('amount','total')->from('ticket_misc_cost');
+        $query = $this->db->get();
+        $result = $query->row_array();
+        $tot = $result['total'];
+        if (!$tot) {
+            $tot = 0;
+        }
+        
+        return $tot;
+    }
+
+    public function getRbs($tick)
+    {
+        $this->db->where_in('ticket_id',$tick);
+        $this->db->select_sum('rsb','total')->from('triage');
         $query = $this->db->get();
         $result = $query->row_array();
         $tot = $result['total'];

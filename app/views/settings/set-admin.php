@@ -17,10 +17,10 @@
             </div>
         </div>
         <?php if ($this->session->flashdata('success')) { ?>
-            <div class="alert alert-success"><?php echo $this->session->flashdata('success'); ?></div>
+            <div class="alert alert-success"><?php echo $this->session->flashdata('success-msg'); ?></div>
         <?php } ?>
         <?php if ($this->session->flashdata('error')) { ?>
-            <div class="alert alert-danger"><?php echo $this->session->flashdata('error'); ?></div>
+            <div class="alert alert-danger"><?php echo $this->session->flashdata('error-msg'); ?></div>
         <?php } ?>
         <div class="tab-content">
             <div class="tab-pane tabs-animation fade show active" id="tab-content-0" role="tabpanel">

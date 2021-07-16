@@ -8,6 +8,8 @@
     $edate = $params['edate'];
 ?>
 
+<?php //var_dump($phistory);die; ?>
+
 <div class="app-main__outer">
     <div class="app-main__inner">
 
@@ -72,7 +74,7 @@
                                 <a data-toggle="tab" href="#cash"
                                    class="btn-pill btn-wide mr-1 ml-1  btn btn-outline-alternate btn-sm">CASH</a>
                                 <a data-toggle="tab" href="#mpesa"
-                                   class="btn-pill btn-wide btn btn-outline-alternate btn-sm">MPESA</a>&nbsp;
+                                   class="btn-pill btn-wide btn btn-outline-alternate btn-sm">PAYBILL</a>&nbsp;
                                 <a data-toggle="tab" href="#debitcard"
                                    class="btn-pill btn-wide btn btn-outline-alternate btn-sm">Credit/Debit Card</a>
                                 <a data-toggle="tab" href="#insurance"
@@ -106,20 +108,20 @@
                                 foreach ($phistory as $one) {
                                     if($date != ""){
                                         if(date('Y-m-d',strtotime($date)) == date('Y-m-d',strtotime($one['created_at']))){
-                                    $totpaid += $one['amount'];
+                                    $totpaid += $one['amount']; 
                                     ?>
                                     <tr>
                                         <th scope="row"><?php echo $i; ?></th>
                                         <td><?php echo $one['pname']." ".$one['mname']." ".$one['lname'];?></td>
                                         <td><?php echo $one['amount']; ?></td>
                                         <td><?php echo $one['mode']; ?></td>
-                                        <td><?php if ($one['mode'] == 'mpesa' || $one['mode'] == 'till') {
+                                        <td><?php if ($one['mode'] == 'mpesa' || $one['mode'] == 'paybill') {
                                                 echo $one['transaction_id'];
                                             } else { ?>
                                                 --
                                             <?php } ?>
                                         </td>
-                                        <td><?php if ($one['mode'] == 'mpesa' || $one['mode'] == 'till') {
+                                        <td><?php if ($one['mode'] == 'mpesa' || $one['mode'] == 'paybill') {
                                                 echo $one['phone_no'];
                                             } else { ?>
                                                 --
@@ -260,20 +262,20 @@
 
                                 <?php $i = 1;$totpaid = 0;
                                 foreach ($phistory as $one) {
-                                    if($one['mode'] == 'mpesa') {
+                                    if($one['mode'] == 'paybill') {
                                     $totpaid += $one['amount'];
                                     ?>
                                     <tr>
                                         <th scope="row"><?php echo $i; ?></th>
                                         <td><?php echo $one['pname']." ".$one['mname']." ".$one['lname'];?></td>
                                         <td><?php echo $one['amount']; ?></td>
-                                        <td><?php if ($one['mode'] == 'mpesa') {
+                                        <td><?php if ($one['mode'] == 'paybill') {
                                                 echo $one['transaction_id'];
                                             } else { ?>
                                                 --
                                             <?php } ?>
                                         </td>
-                                        <td><?php if ($one['mode'] == 'mpesa') {
+                                        <td><?php if ($one['mode'] == 'paybill') {
                                                 echo $one['phone_no'];
                                             } else { ?>
                                                 --

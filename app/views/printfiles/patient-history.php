@@ -1,3 +1,4 @@
+<?php //var_dump($radiologydetails);die; ?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -82,7 +83,7 @@
     <table class="inv_info">
         <tr class="product_row">
             <td><b>NAME: </b></td>
-            <td><?php echo $patientdetails['name']." ".$patientdetails['lname']; ?></td>
+            <td><?php echo ucwords($patientdetails['name']." ".$patientdetails['lname']); ?></td>
             <td><b>AGE: </b></td>
             <td><?php echo(date('Y-m-d') - $patientdetails['dob']); ?></td>
         </tr>
@@ -105,7 +106,7 @@
         
     </table>
 
-    <h3>1.)Medication</h3>
+    <h3>Medication</h3>
 <div>
     <table id="phistory" style="border-collapse: collapse;">
         <tr class="product_row" style="background-color: #D6D4D7;">
@@ -113,21 +114,75 @@
             <td class="bordered-cell" style="color: #450662;"><b>MED NAME</b></td>
             <td class="bordered-cell" style="color: #450662;"><b>UNITS</b></td>
             <td class="bordered-cell" style="color: #450662;"><b>PRESC.</b></td>
+            <td class="bordered-cell" style="color: #450662;"><b>COST</b></td>
             <td class="bordered-cell" style="color: #450662;"><b>PRESCRIBED BY</b></td>         
         </tr>
-        <?php $i=0; foreach ($medicationdetails as $key) { $i++; ?>
+        <?php $i=0; $totmed = 0; foreach ($medicationdetails as $key) { $i++; $totmed += $key['cost']*$key['units']; ?>
          <tr class="product_row">
             <td class="bordered-cell"><?php echo $i; ?></td>
             <td class="bordered-cell"><?php echo $key['mname']; ?></td>
             <td class="bordered-cell"><?php echo $key['units']; ?></td>
             <td class="bordered-cell"><?php echo $key['prescription']; ?></td>
+            <td class="bordered-cell"><?php echo $key['cost']*$key['units']; ?></td>
             <td class="bordered-cell"><?php echo $key['uname']; ?></td>
         </tr>
-    <?php }?>     
+    <?php }?> 
+        <tr>
+            <td class="bordered-cell text-center" colspan="4">Total</td>
+            <td class="bordered-cell"><?php echo $totmed; ?></td>
+            <td class="bordered-cell"></td>
+        </tr>    
     </table>
     </div>
     <br>
-    <h3>2.) Nursing Cadex</h3>
+
+    <?php if (sizeof($labdetails) > 0) { ?>
+    <h3>Lab Details</h3>
+    <table id="phistory" style="border-collapse: collapse;">
+        <tr class="product_row" style="background-color: #D6D4D7;">
+            <td class="bordered-cell" style="color: #450662;"><b>#</b></td>
+            <td class="bordered-cell" style="color: #450662;"><b>TEST</b></td>
+            <td class="bordered-cell" style="color: #450662;"><b>COST</b></td>         
+        </tr>
+        <?php $i = 1; $totlab=0; foreach ($labdetails as $one) { $totlab += $one['cost']; ?>
+         <tr class="product_row">
+            <td class="bordered-cell"><?php echo $i; ?></td>
+            <td class="bordered-cell"><?php echo $one['test_name']; ?></td>
+            <td class="bordered-cell"><?php echo number_format($one['cost']); ?></td>
+        </tr>
+    <?php $i++; } ?> 
+        <tr>
+            <td class="bordered-cell text-center" colspan="2">Total</td>
+            <td class="bordered-cell"><?php echo $totcost; ?></td>
+        </tr>   
+    </table>
+<?php }?>
+    <br>
+    <?php if (sizeof($radiologydetails) > 0) { ?>
+    <h3>Radiology Details</h3>
+    <table id="phistory" style="border-collapse: collapse;">
+        <tr class="product_row" style="background-color: #D6D4D7;">
+            <td class="bordered-cell" style="color: #450662;"><b>#</b></td>
+            <td class="bordered-cell" style="color: #450662;"><b>TEST</b></td>
+            <td class="bordered-cell" style="color: #450662;"><b>COST</b></td>         
+        </tr>
+        <?php $i = 1; $totrad=0; foreach ($radiologydetails as $one) { $totrad += $one['cost']; ?>
+         <tr class="product_row">
+            <td class="bordered-cell"><?php echo $i; ?></td>
+            <td class="bordered-cell"><?php echo $one['test_name']; ?></td>
+            <td class="bordered-cell"><?php echo number_format($one['cost']); ?></td>
+        </tr>
+    <?php $i++; } ?>
+    <tr>
+            <td class="bordered-cell text-center" colspan="2">Total</td>
+
+            <td class="bordered-cell"><?php echo $totrad; ?></td>
+        </tr>     
+    </table>
+<?php }?>
+    <br>
+<?php if (sizeof($nursing_cadex) > 0) { ?>
+    <h3>Nursing Cadex</h3>
     <table id="phistory" style="border-collapse: collapse;">
         <tr class="product_row" style="background-color: #D6D4D7;">
             <td class="bordered-cell" style="color: #450662;"><b>#</b></td>
@@ -144,9 +199,11 @@
         </tr>
     <?php $i++; } ?>    
     </table>
+<?php }?>
     <br>
 
-    <h3>3.) Observations</h3>
+<?php if (sizeof($observations) > 0) { ?>
+    <h3>Observations</h3>
     <table id="phistory" style="border-collapse: collapse;">
         <tr class="product_row" style="background-color: #D6D4D7;">
             <td class="bordered-cell" style="color: #450662;"><b>#</b></td>
@@ -169,8 +226,10 @@
         </tr>
     <?php $i++; }?>     
     </table>
+<?php }?>
     <br>
 
+<?php if (sizeof($transfusions) > 0) { ?>
     <h3>4.) Blood Transfusion</h3>
      <table id="phistory" style="border-collapse: collapse;">
         <tr class="product_row" style="background-color: #D6D4D7;">
@@ -196,9 +255,11 @@
         </tr>
     <?php $i++; }?>     
     </table>
+<?php }?>
     <br>
 
-    <h3>5.) Nursing Care Plan</h3>
+<?php if (sizeof($nursing_care) > 0) { ?>
+    <h3>Nursing Care Plan</h3>
     <table id="phistory" style="border-collapse: collapse;">
         <tr class="product_row" style="background-color: #D6D4D7;">
             <td class="bordered-cell" style="color: #450662;"><b>#</b></td>
@@ -225,9 +286,10 @@
         </tr>
     <?php $i++; }?>     
     </table>
+<?php }?>
     <br>
-
-    <h3>6.) Other Charges</h3>
+<?php if (sizeof($costs) > 0) { ?>
+    <h3>Other Charges</h3>
     <table id="phistory" style="border-collapse: collapse;">
         <tr class="product_row" style="background-color: #D6D4D7;">
             <td class="bordered-cell" style="color: #450662;"><b>#</b></td>
@@ -236,7 +298,7 @@
             <td class="bordered-cell" style="color: #450662;"><b>DATE</b></td>
             <td></td>         
         </tr>
-        <?php $i = 1;$total = 0; foreach ($costs as $one) {$total += $one['amount']; ?>
+        <?php $i = 1;$totothers = 0; foreach ($costs as $one) {$totothers += $one['amount']; ?>
          <tr class="product_row">
             <td class="bordered-cell"><?php echo $i; ?></td>
             <td class="bordered-cell"><?php echo $one['cost_name']; ?></td>
@@ -247,9 +309,75 @@
     <?php $I++; }?> 
         <tr>
             <td class="bordered-cell" colspan="2"></td>
-            <td class="bordered-cell"><?php echo $total; ?></td>
+            <td class="bordered-cell"><?php echo $totothers; ?></td>
             <td class="bordered-cell"></td>
         </tr>    
+    </table>
+<?php }?>
+
+    <h3>Total Billed</h3>
+    <table id="phistory" style="border-collapse: collapse;">
+        <tr class="product_row" style="background-color: #D6D4D7;">
+            <td class="bordered-cell" style="color: #450662;"><b>#</b></td>
+            <td class="bordered-cell" style="color: #450662;"><b>DEPARTMENT</b></td>
+            <td class="bordered-cell" style="color: #450662;"><b>AMOUNT</b></td>          
+        </tr>
+        <?php if($totcons > 0) {?>
+        <tr class="product_row">
+            <td class="bordered-cell"></td>
+            <td class="bordered-cell">Consultation</td>
+            <td class="bordered-cell"><?php echo $totcons; ?></td>
+        </tr>
+        <?php }?>
+        <?php if($totrsb > 0) {?>
+        <tr class="product_row">
+            <td class="bordered-cell"></td>
+            <td class="bordered-cell">Triage </td>
+            <td class="bordered-cell"><?php echo $totrsb; ?></td>
+        </tr>
+        <?php }?>
+        <?php if($totmed > 0) {?>
+        <tr class="product_row">
+            <td class="bordered-cell"></td>
+            <td class="bordered-cell">Medication</td>
+            <td class="bordered-cell"><?php echo $totmed; ?></td>
+        </tr>
+        <?php }?>
+        <?php if($totlab > 0) {?>
+         <tr class="product_row">
+            <td class="bordered-cell"></td>
+            <td class="bordered-cell">Lab</td>
+            <td class="bordered-cell"><?php echo $totlab; ?></td>
+        </tr>
+        <?php }?>
+        <?php if($totrad > 0) {?>
+        <tr class="product_row">
+            <td class="bordered-cell"></td>
+            <td class="bordered-cell">Radiology</td>
+            <td class="bordered-cell"><?php echo $totrad; ?></td>
+        </tr>
+        <?php }?> 
+        <?php if($totothers > 0) {?>
+        <tr class="product_row">
+            <td class="bordered-cell"></td>
+            <td class="bordered-cell">Others e.g Procedures</td>
+            <td class="bordered-cell"><?php echo $totothers; ?></td>
+        </tr>
+        <?php }?>
+        <?php if($totwaiver > 0) {?>
+        <tr class="product_row">
+            <td class="bordered-cell"></td>
+            <td class="bordered-cell"><b><i>Waived Amount</i></b></td>
+            <td class="bordered-cell"><b></b><?php echo number_format($totwaiver); ?></b></td>
+        </tr>
+        <?php }?> 
+       
+        <tr class="product_row">
+            <td class="bordered-cell"></td>
+            <td class="bordered-cell"><b><i>Total Bill</i></b></td>
+            <td class="bordered-cell"><b><?php echo number_format(($totcons+$totrsb+$totmed+$totlab+$totrad+$totothers)-($totwaiver+$totpaid)); ?></b></td>
+        </tr>
+        
     </table>
     <br>
    
@@ -263,8 +391,8 @@
         </tr>
         
         <tr>
-           <td>Tests by: </td> 
-           <td><?php echo $tests_by;?></td>
+           <td>Report by: </td> 
+           <td><?php echo $this->session->userdata('user_aob')->name;?></td>
         </tr>
          <tr>
            <td colspan="3">

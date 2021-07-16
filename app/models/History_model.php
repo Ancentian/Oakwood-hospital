@@ -26,6 +26,14 @@ class History_model extends CI_Model
         return $query->result_array();
     }
 
+    function fetch_ticketById($id)
+    {
+       $this->db->where('id', $id);
+        $this->db->select()->from('tickets');
+        $query = $this->db->get();
+        return $query->result_array()[0]; 
+    }
+
     function payments()
     {
         $this->db->select('ticket_payments.*,patients.name as pname,patients.lname as lname,patients.mid_name as mname')->from('ticket_payments');
@@ -33,5 +41,15 @@ class History_model extends CI_Model
         $this->db->join('patients','tickets.patient_id=patients.id');
         $query = $this->db->get();
         return $query->result_array();
+    }
+
+    function deleteTicket($id)
+    {
+        $this->db->where('ticket_id', $id);
+        $this->db->delete('ticket_movements');
+
+        $this->db->where('id', $id);
+        $this->db->delete('tickets');
+        return $this->db->affected_rows();
     }
 }

@@ -1,4 +1,4 @@
-<?php //echo $total;die;?>
+<?php //echo $totpaid;die;?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -61,7 +61,7 @@
     <table class="inv_info">
         <tr>
             <td>Patient:</td>
-            <td><?php echo $ticketdetails['pname']; ?> <?php echo $ticketdetails['mname']; ?> <?php echo $ticketdetails['lname']; ?></td>
+            <td><?php echo ucwords($ticketdetails['pname']); ?> <?php echo ucwords($ticketdetails['mname']); ?> <?php echo ucwords($ticketdetails['lname']); ?></td>
         </tr>
         <tr>
             <td>Patient No:</td>
@@ -95,7 +95,7 @@
         if($totcons > 0)
         echo '<tr>
             <td colspan="2">Consultation</td>
-             <td> Ksh ' . $totcons. '</td>
+             <td> Ksh ' . number_format($totcons). '</td>
             
         </tr>';
         if($totrsb > 0)
@@ -107,25 +107,31 @@
         if($totmed > 0)
         echo '<tr>
             <td colspan="2">Medication</td>
-             <td> Ksh ' . $totmed. '</td>
+             <td> Ksh ' . number_format($totmed). '</td>
             
         </tr>';
         if($totlab > 0)
         echo '<tr>
             <td colspan="2">Labtests</td>
-             <td> Ksh ' . $totlab. '</td>
+             <td> Ksh ' . number_format($totlab). '</td>
+            
+        </tr>';
+        if($totwaiver > 0)
+        echo '<tr>
+            <td colspan="2">Waiver Amount</td>
+             <td> Ksh ' . number_format($totwaiver). '</td>
             
         </tr>';
         if($totrad > 0)
         echo '<tr>
             <td colspan="2">Radiology screening</td>
-             <td> Ksh ' . $totrad. '</td>           
+             <td> Ksh ' . number_format($totrad). '</td>           
         </tr>';
         if($totmisc > 0){
         foreach($miscdetails as $one){
             echo '<tr>
             <td colspan="2">'.$one['cost_name'].'</td>
-             <td> Ksh ' . $one['amount']. '</td></tr>';
+             <td> Ksh ' . number_format($one['amount']). '</td></tr>';
          }}
              echo '<tr><td colspan="3">&nbsp;</td></tr>';
         ?>
@@ -135,7 +141,7 @@
     <table class="inv_info">
         <tr>
             <td><b>Total</b></td>
-            <td><b>Ksh. <?php echo $total ?></b></td>
+            <td><b>Ksh. <?php echo number_format($total); ?></b></td>
         </tr>
 
 

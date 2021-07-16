@@ -67,6 +67,13 @@ class Settings_model extends CI_Model
         return $query->row_array();
     }
 
+    function fetch_specialConsultationFee()
+    {
+        $this->db->limit(1);
+        $query = $this->db->get('special_cons_fee');
+        return $query->row_array();
+    }
+
     function update_setAdmin($data)
     {
         $this->db->where('id', 1);
@@ -78,6 +85,14 @@ class Settings_model extends CI_Model
     {
         $this->db->where('id', 1);
         $this->db->update('discount_rates', $data);
+        //return $this->db->affected_rows();    
+    }
+
+    function update_specialConsFee($data)
+    {
+        //var_dump($data);die;
+        $this->db->where('id', 1);
+        $this->db->update('special_cons_fee', $data);
         //return $this->db->affected_rows();    
     }
 

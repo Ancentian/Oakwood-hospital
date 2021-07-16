@@ -43,8 +43,8 @@
                                             <td style="color: <?php if($dueArr[$key]['due'] > 0){ echo 'red';}else{echo 'green';}?>"><?php echo abs($dueArr[$key]['due']); ?></td>
                                             
                                             <td>
-                                                <a href="<?php echo base_url(); ?>pos/addpmt/<?php echo $one['id']; ?>"><i
-                                                            class="fa fa-plus icon-custom" aria-hidden="true"></i></a>
+                                                <!-- <a href="<?php //echo base_url(); ?>pos/addpmt/<?php //echo $one['id']; ?>"><i
+                                                            class="fa fa-plus icon-custom" aria-hidden="true"></i></a> -->
 
                                                 </td>
                                         </tr>

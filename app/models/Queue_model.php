@@ -89,6 +89,15 @@ class Queue_model extends CI_Model
 
     function delete_medication($id)
     {
+        $meddata = $this->fetch_medications($id);
+        $medid= $meddata['medicine_id'];
+        $qty = $meddata['units'];
+        //var_dump($qty);die;
+
+        $this->db->set('qty', "qty+$qty", FALSE);
+        $this->db->where('id', $medid);
+        $this->db->update('medicine');
+
         $this->db->where('id',$id);
         $this->db->delete('ticket_medication');
         return $this->db->affected_rows();
@@ -130,14 +139,37 @@ class Queue_model extends CI_Model
         return $query->result_array();
     }
 
-    function add_triage($update, $new, $triage, $mvtid)
+    function add_triage($update, $new, $triage, $mvtid)//Add Triage 1st Time
     {
+        //var_dump($triage);die;
         $this->db->where('id', $mvtid);
         $this->db->update('ticket_movements', $update);
 
         $this->db->insert('triage', $triage);
 
         $this->db->insert('ticket_movements', $new);
+        return $this->db->affected_rows();
+    }
+
+    function update_triageData($update, $new, $triage, $mvtid)//Update Triage by Triage Department
+    {
+        $ticket_id = $triage['ticket_id'];
+        //var_dump($triage);die;
+        $this->db->where('id', $mvtid);
+        $this->db->update('ticket_movements', $update);
+
+        $this->db->where('ticket_id', $ticket_id);
+        $this->db->update('triage', $triage);
+
+        $this->db->where('ticket_id', $ticket_id);
+        $this->db->update('ticket_movements', $new);
+        return $this->db->affected_rows();
+    }
+
+    function update_triage($id, $data)//Update Triage in Admin Side
+    {
+        $this->db->where('id', $id);
+        $this->db->update('triage', $data);
         return $this->db->affected_rows();
     }
 
@@ -244,6 +276,14 @@ class Queue_model extends CI_Model
         $this->db->select()->from('treatments');
         $query = $this->db->get();
         return $query->result_array();
+    }
+
+    function fetch_medications($id)
+    {
+        $this->db->where('id', $id);
+        $this->db->select()->from('ticket_medication');
+        $query = $this->db->get();
+        return $query->result_array()[0]; 
     }
 
     function fetch_mvt($id)
@@ -486,7 +526,7 @@ class Queue_model extends CI_Model
                 if (!$onetest) {
                     $onetest = 'deleted';
                 }
-                $onetestdetails = ['test_id' => $testid,'test_name' => $onetest, 'test_result' => $testresults[$i], 'attachment' => $key['results'], 'requested_by' => $this->staff_model->fetch_byId($key['requested_by'])[0]['name'], 'tests_by' => $this->staff_model->fetch_byId($key['results_by'])[0]['name'], 'labstatus' => $key['status']];
+                $onetestdetails = ['test_id' => $testid,'test_name' => $onetest, 'cost' => $onetest['cost'], 'test_result' => $testresults[$i], 'attachment' => $key['results'], 'requested_by' => $this->staff_model->fetch_byId($key['requested_by'])[0]['name'], 'tests_by' => $this->staff_model->fetch_byId($key['results_by'])[0]['name'], 'labstatus' => $key['status']];
                 $results[] = $onetestdetails;
 
                 $i++;

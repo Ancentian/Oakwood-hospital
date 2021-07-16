@@ -96,6 +96,7 @@ class Pos extends BASE_Controller
     public function addpmt_post($id)
     {       
         $forminput = $this->input->post();
+        var_dump($forminput);die;
         $insert_id = $this->pos_model->addpmt($id,$forminput);
 
         if ($insert_id > 0) {

@@ -55,7 +55,7 @@
                             foreach ($pmts as $one) {
                                 // echo strtotime($edate)." ";echo strtotime($one['created_at'])."<br>";
                                 if($todays == "yes"){if(date('Y-m-d',strtotime($one['created_at'])) == date('Y-m-d')){
-                                    $tot += $one['amount'];
+                                    $tot += $one['amount']; 
                                 ?>
                                 <tr>
                                     <th scope="row"><?php echo $i; ?></th>
@@ -74,12 +74,12 @@
                                 <?php }
                             }elseif($sdate){
                                 if(strtotime($one['created_at']) >= strtotime($sdate) && strtotime($one['created_at']) < strtotime($edate)+86400){
-                                 $tot += $one['amount'];?>
+                                 $tot += $one['amount']; $mode = ""; foreach(json_decode($one['mode'],true) as $key){$mode .= $key.", ";}?>
                                 <tr>
                                     <th scope="row"><?php echo $i; ?></th>
                                     <td><?php echo $one['name']." ".$one['lname']; ?></td>
                                     <td><?php echo $one['amount']; ?></td>
-                                    <td><?php echo $one['mode']; ?></td>
+                                    <td><?php echo $mode; ?></td>
                                     <td><?php echo date('Y-m-d H:i',strtotime($one['created_at']));?></td>                
                                     <td>
                                         <a href="<?php echo base_url(); ?>pos/printpmt/<?php echo $one['id']; ?>"><i class="fa fa-print icon-success" aria-hidden="true"></i></a>
@@ -90,12 +90,12 @@
                                                     class="fa fa-fw icon-danger"></i></a></td>
                                 </tr>
                             <?php } } else{
-                             $tot += $one['amount'];?>
+                             $tot += $one['amount']; $mode = ""; foreach(json_decode($one['mode'],true) as $key){$mode .= $key.", ";}?>
                                 <tr>
                                     <th scope="row"><?php echo $i; ?></th>
                                     <td><?php echo $one['name']." ".$one['lname']; ?></td>
                                     <td><?php echo $one['amount']; ?></td>
-                                    <td><?php echo $one['mode']; ?></td>
+                                    <td><?php echo $mode; ?></td>
                                     <td><?php echo date('Y-m-d H:i',strtotime($one['created_at']));?></td>                
                                     <td>
                                         <a href="<?php echo base_url(); ?>pos/printpmt/<?php echo $one['id']; ?>"><i class="fa fa-print icon-success" aria-hidden="true"></i></a>

@@ -46,7 +46,12 @@
                                         } ?></td>
                                     <td>
                                         <a href="<?php echo base_url(); ?>queue/pmt_details/<?php echo $one['id']; ?>/0"><span
-                                                    class="badge badge-info">view</span></a></td>
+                                                    class="badge badge-info">view</span></a>
+                                        <?php if($this->session->userdata('user_aob')->role == 'admin') {?>
+                                        <a href="<?php echo base_url(); ?>queue/billWaver/<?php echo $one['id']; ?>/0"><span
+                                                    class="badge badge-warning">Wave Bill</span></a>
+                                        <?php }?>
+                                    </td>
 
                                 </tr>
                                 <?php $i++;
