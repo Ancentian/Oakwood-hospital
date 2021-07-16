@@ -81,7 +81,7 @@
                                 </i>Todays Payments
                             </a>
                         </li>
-                        <li>
+                        <li hidden="">
                             <a href="<?php echo base_url();?>pos/collectpayment">
                                 <i class="metismenu-icon pe-7s-mouse">
                                 </i>Make Payment
@@ -215,7 +215,7 @@
                         $this->db->select('department,is_offered')->from('work_flows');
                         $query = $this->db->get();
                         $activity = $query->result_array()[0];
-                        if (($activity['is_offered'] == 'yes' && $activity['department'] == $userdata->department) || $userdata->department == '18') {
+                        if (($activity['is_offered'] == 'yes' && $activity['department'] == $userdata->department) || $userdata->department == '18' || $this->session->userdata('user_aob')->role == 'finance') {
                             ?>
 
                             <li>
@@ -258,7 +258,7 @@
                                 </a>
                             </li>
                             
-                        <?php } else{ if($this->session->userdata('user_aob')->role == 'admin' || $this->session->userdata('user_aob')->role == 'finance'){?>
+                        <?php } else{ if($this->session->userdata('user_aob')->role == 'admin' || $this->session->userdata('user_aob')->role == 'finance' || $this->session->userdata('user_aob')->role == 'receptionist'){?>
                            <li>
                             <a href="<?php echo base_url() ?>payments/search">
                                 <i class="metismenu-icon pe-7s-display2"></i>
@@ -303,6 +303,7 @@
             <?php } ?>
             </ul>
         </li>
+        <?php if ($this->session->userdata('user_aob')->role == 'admin' || $this->session->userdata('user_aob')->role == 'receptionist' || $this->session->userdata('user_aob')->role == 'finance') { ?>
         <li>
             <a href="#">
                 <i style="font-size: 1.5rem; color: Orange;" class="  pe-7s-add-user"></i>
@@ -310,8 +311,6 @@
                 <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
             </a>
             <ul>
-
-                <?php if ($this->session->userdata('user_aob')->role == 'admin' || $this->session->userdata('user_aob')->role == 'receptionist') { ?>
                     <li>
                         <a href="<?php echo base_url(); ?>dashboard/addpatient">
                             <i class="metismenu-icon pe-7s-user"></i>
@@ -324,9 +323,6 @@
                             Patients List
                         </a>
                     </li>
-                    
-                <?php } ?>
-                <?php if ($this->session->userdata('user_aob')->role == 'admin' || $this->session->userdata('depart')->department == '4') { ?>
                  <li>
                     <a href="<?php echo base_url(); ?>history/search">
                         <i class="metismenu-icon pe-7s-display2"></i>
@@ -342,14 +338,9 @@
             </ul>
         </li>
     <?php } ?>
-    <?php if ($this->session->userdata('user_aob')->role == 'admin' || $this->session->userdata('user_aob')->role == 'receptionist') { ?>
-
-    <?php } ?>
-
 
     <?php if ($this->session->userdata('user_aob')->role == 'admin' || $this->session->userdata('user_aob')->role == 'lab') { ?>
-        <?php if ($this->session->userdata('user_aob')->role == 'admin' || $this->session->userdata('user_aob')->role == 'lab') { ?>
-        <?php } ?>
+        
         <li>
             <a href="#">
                 <i style="font-size: 1.5rem; color: Mediumslateblue;" class=" fas fa-vial"></i>
@@ -452,7 +443,7 @@
             </ul>
         </li>
     <?php } ?>
-    <?php if ($this->session->userdata('user_aob')->role == 'admin'){ ?>
+    <?php if ($this->session->userdata('user_aob')->role == 'admin' || $this->session->userdata('user_aob')->role == 'finance'){ ?>
 
         <li>
             <a href="#">
@@ -550,9 +541,9 @@
                     </a>
                 </li>
                 <li>
-                    <a href="<?php echo base_url(); ?>settings/discountSettings">
+                    <a href="<?php echo base_url(); ?>settings/specialConsulatation">
                         <i class="metismenu-icon pe-7s-mouse">
-                        </i>Discount Settings
+                        </i>Special Con. Settings
                     </a>
                 </li>
             </ul>

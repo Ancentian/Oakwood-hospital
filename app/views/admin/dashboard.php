@@ -1,6 +1,6 @@
 <div class="app-main__outer">
     <div class="app-main__inner">
-        <?php if($this->session->userdata('user_aob')->role == 'admin' || $this->session->userdata('user_aob')->role == 'finance'){ ?>
+        <?php if($this->session->userdata('user_aob')->role == 'admin'){ ?>
             <div class="row">
                 <div class="col-lg-6 col-xl-4">
                     <div class="dropdown btn-group-lg">
@@ -18,7 +18,7 @@
                         </div>
                     </div>
                 </div>
-                <?php if ($this->session->userdata('user_aob')->role == 'admin'){ ?>
+                <?php if ($this->session->userdata('user_aob')->role == 'admin' || $this->session->userdata('user_aob')->role == 'finance'){ ?>
                     <div class="col-lg-6 col-xl-4">
                         <div class="dropdown btn-group-lg">
                             <button type="button" style="width: 100%; height: 75px;" aria-haspopup="true" aria-expanded="false" data-toggle="dropdown" class="mb-3 mr-2 dropdown-toggle btn btn-dark">
@@ -42,6 +42,7 @@
                             </div>
                         </div>
                     <?php } ?>
+                    <?php if ($this->session->userdata('user_aob')->role == 'admin' || $this->session->userdata('user_aob')->role == 'pharmacist'){ ?>
                     <div class="col-lg-6 col-xl-4">
                         <div class="dropdown btn-group-lg">
                             <button type="button" style="width: 100%; height: 75px;" aria-haspopup="true" aria-expanded="false" data-toggle="dropdown" class="mb-3 mr-2 dropdown-toggle btn btn-alternate"><i style="font-size: 1.5rem; color: Tomato;" class="  pe-7s-server"></i>&nbsp; Pharmacy</button>
@@ -56,7 +57,7 @@
                             </div>
                         </div>
                     </div>
-
+                <?php }?>
                     <div class="col-lg-6 col-xl-4">
                         <div class="dropdown btn-group-lg">
                             <button type="button" style="width: 100%; height: 75px;" aria-haspopup="true" aria-expanded="false" data-toggle="dropdown" class="mb-3 mr-2 dropdown-toggle btn btn-light"><i style="font-size: 1.5rem; color: Mediumslateblue;" class="  pe-7s-car"></i>&nbsp; Consultation</button>
@@ -82,7 +83,7 @@
                             <div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu">
                                 <ul class="nav flex-column">
                                     <li class="nav-item-header nav-item">Modules</li>
-                                    <?php if ($this->session->userdata('user_aob')->role == 'admin' || $this->session->userdata('user_aob')->role == 'receptionist') { ?>
+                                    <?php if ($this->session->userdata('user_aob')->role == 'admin' || $this->session->userdata('user_aob')->role == 'receptionist' || $this->session->userdata('user_aob')->role == 'finance') { ?>
                                         <li class="nav-item"><a href="<?php echo base_url(); ?>dashboard/addpatient" class="nav-link">Register Patient</a></li>
                                         <li class="nav-item"><a href="<?php echo base_url(); ?>dashboard/patientslist" class="nav-link">Patient List</a></li>
                                     <?php } ?>
@@ -94,7 +95,7 @@
                             </div>
                         </div>
                     </div>
-
+                    <?php if ($this->session->userdata('user_aob')->role == 'admin' || $this->session->userdata('user_aob')->role == 'pharmacist'){ ?>
                     <div class="col-lg-6 col-xl-4">
                         <div class="dropdown btn-group-lg">
                             <button type="button" style="width: 100%; height: 75px;" aria-haspopup="true" aria-expanded="false" data-toggle="dropdown" class="mb-3 mr-2 dropdown-toggle btn btn-danger"><i style="font-size: 1.5rem; color: white;" class="fas fa-vial"></i>&nbsp; Laboratory</button>
@@ -110,7 +111,7 @@
                             </div>
                         </div>
                     </div>
-
+                <?php }?>
                     <div class="col-lg-6 col-xl-4">
                         <div class="dropdown btn-group-lg">
                             <button type="button" style="width: 100%; height: 75px;" aria-haspopup="true" aria-expanded="false" data-toggle="dropdown" class="mb-3 mr-2 dropdown-toggle btn btn-primary"><i style="font-size: 1.5rem; color: white;" class="pe-7s-diamond"></i>&nbsp; Radiology</button>
@@ -125,6 +126,7 @@
                             </div>
                         </div>
                     </div>
+                    
                     <?php if ($this->session->userdata('user_aob')->role == 'admin'){ ?>
                         <div class="col-lg-6 col-xl-4">
                             <div class="dropdown btn-group-lg">

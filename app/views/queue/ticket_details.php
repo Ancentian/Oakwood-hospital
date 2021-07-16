@@ -110,21 +110,21 @@
                                     </div>
                                     <div class="position-relative row form-group col-sm-12">
                                     <div class="col-sm-2">Clinical History</div>
-                                    <div class="col-sm-10"><textarea name="clinical_history" class="form-control" rows="3" disabled><?php echo $diagnosisdetails['clinical_history']; ?></textarea>
+                                    <div class="col-sm-10"><textarea name="clinical_history" class="form-control" rows="3"><?php echo $diagnosisdetails['clinical_history']; ?></textarea>
                                     </div>
 
                                 </div>
 
                                 <div class="position-relative row form-group col-sm-12">
                                     <div class="col-sm-2">Physical Findings</div>
-                                    <div class="col-sm-10"><textarea name="physical_findings" class="form-control" rows="3" disabled><?php echo $diagnosisdetails['physical_findings']; ?></textarea>
+                                    <div class="col-sm-10"><textarea name="physical_findings" class="form-control" rows="3"><?php echo $diagnosisdetails['physical_findings']; ?></textarea>
                                     </div>
 
                                 </div>
 
                                 <div class="position-relative row form-group col-sm-12">
                                     <div class="col-sm-2">Impressions & Diagnosis</div>
-                                    <div class="col-sm-10"><textarea name="diagnosis" class="form-control" rows="3" disabled><?php echo $diagnosisdetails['diagnosis']; ?></textarea>
+                                    <div class="col-sm-10"><textarea name="diagnosis" class="form-control" rows="3" ><?php echo $diagnosisdetails['diagnosis']; ?></textarea>
                                     </div>
 
                                 </div>

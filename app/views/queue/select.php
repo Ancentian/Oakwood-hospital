@@ -1,4 +1,5 @@
 <?php $userdata = $this->session->userdata('user_aob'); ?>
+<?php //var_dump($special);die; ?>
 <div class="app-main__outer">
     <div class="app-main__inner">
 
@@ -31,12 +32,9 @@
                                     <div class="col-sm-8">
                                         <select class="select form-control" name="activity" id="activity" class="form-control" required>
                                             <option value="">--Choose one</option>
-                                            <?php foreach ($active_act as $act) {
-                                                
-                                                    ?>
+                                            <?php foreach ($active_act as $act) { ?>
                                                     <option value="<?php echo $act['id']; ?>"><?php echo $act['name']; ?></option>
-                                                <?php 
-                                            } ?>
+                                            <?php } ?>
                                         </select>
                                     </div>
                                 </div>
@@ -46,6 +44,7 @@
                                             <option value="">--Choose one</option>
                                             <option value="0">Zero consultation fee</option>
                                             <option value="100">Normal consultation fee</option>
+                                            <option value="<?php echo $special['special_fee'];?>">Special consultation fee</option>
                                         </select>
                                     </div>
                                 </div>

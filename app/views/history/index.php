@@ -50,6 +50,10 @@
                                         <a href="<?php echo base_url(); ?>inpatient/services/<?php echo $one['id']; ?>/0" class="btn btn-dark" ><i class="fa fa-history" title="History"></i></a>
                                         &nbsp;
                                         <a href="<?php echo base_url(); ?>history/print_patientHistory/<?php echo $one['id']; ?>/0" target="_blank" class="btn btn-light" ><i class="fa fa-print" title="History"></i></a>
+                                        &nbsp;
+                                        <?php if($this->session->userdata('user_aob')->role == 'admin') {?>
+                                        <a href="<?php echo base_url(); ?>history/deleteTicket/<?php echo $one['id']; ?>/0" class="btn btn-danger" ><i class="fa fa-trash" title="Delete Ticket"></i></a>
+                                        <?php }?>
 
                                     </td>
 

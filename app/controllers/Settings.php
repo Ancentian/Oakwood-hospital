@@ -58,6 +58,14 @@ class Settings extends BASE_Controller
         $this->load->view('layout/template', $this->data);
     }
 
+     function specialConsulatation()
+    {
+        $this->data['special'] = $this->settings_model->fetch_specialConsultationFee();
+        $this->data['pg_title'] = "Dashboard";
+        $this->data['page_content'] = 'settings/special-con';
+        $this->load->view('layout/template', $this->data);
+    }
+
     function add_paymentMode()
     {
        $forminput = $this->input->post();
@@ -133,6 +141,24 @@ class Settings extends BASE_Controller
             $this->session->set_flashdata('error-msg', 'Failed, please try again');
         }
         redirect('settings/discountSettings'); 
+    }
+
+    function updateSpecialFee()
+    {
+        $forminput = $this->input->post();
+
+        $data = array('special_fee' => $forminput['special_fee']);
+
+        //var_dump($data);die;
+
+        $inserted = $this->settings_model->update_specialConsFee($data);
+
+        if ($inserted > 0) {
+            $this->session->set_flashdata('success-msg', 'Special Fee defined successfully');
+        } else {
+            $this->session->set_flashdata('error-msg', 'Failed, please try again');
+        }
+        redirect('settings/specialConsulatation'); 
     }
 
     function deletePaymentMode($id)

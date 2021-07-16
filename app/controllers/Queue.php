@@ -30,6 +30,7 @@ class Queue extends BASE_Controller
         $this->load->model('patients_model');
         $this->load->model('wards_model');
         $this->load->model('payments_model');
+        $this->load->model('settings_model');
 
     }
 
@@ -42,6 +43,7 @@ class Queue extends BASE_Controller
 
     function direct_queue(int $pid)
     {
+        $this->data['special'] = $this->settings_model->fetch_specialConsultationFee();
         $this->data['pid']  = $pid;
         $this->data['pg_title'] = "Select";
         $this->data['page_content'] = 'queue/direct_queue';
@@ -50,6 +52,7 @@ class Queue extends BASE_Controller
 
     function select()
     {
+        $this->data['special'] = $this->settings_model->fetch_specialConsultationFee();
         $this->data['radiology'] = $this->radiology_model->fetch_radiology_screening();
         $this->data['labtests'] = $this->lab_model->fetch_lab_tests();
         $forminput = $this->input->post();
@@ -71,6 +74,7 @@ class Queue extends BASE_Controller
         $labdetails = $this->queue_model->ticket_labdetails_p($tickid);
         $radiologydetails = $this->queue_model->ticket_radiologydetails_p($tickid);
         $medicationdetails = $this->queue_model->ticket_prescription_p($tickid);
+        $this->data['triage'] = $this->queue_model->ticket_triage($tickid); 
         $totlab = 0;
         $totmed = 0;
         $totrad = 0;
@@ -233,6 +237,9 @@ class Queue extends BASE_Controller
         // var_dump($medicine);die;
         $prevAct_update = ['status' => 'seen', 'triage_status' => '1', 'seen_by' => $this->session->userdata('user_aob')->id];
         $triage_data = ['weight' => $forminput['weight'], 'height' => $forminput['height'], 'temperature' => $forminput['temperature'], 'blood_pressure' => $forminput['blood_pressure'], 'spo2' => $forminput['spo2'], 'rsb' => $forminput['rsb'], 'rsb_reading' => $forminput['rsb_reading'], 'resp_rate' => $forminput['resp_rate'], 'ticket_id' => $forminput['ticket_id']];
+
+        //var_dump($triage_data);die;
+
         $newAct_data = ['ticket_id' => $forminput['ticket_id'], 'from_dpt' => $this->session->userdata('user_aob')->department, 'to_dpt' => $consultation_dpt, 'activity' => $activity, 'sent_by' => $this->session->userdata('user_aob')->id];
 
         $inserted = $this->queue_model->add_triage($prevAct_update, $newAct_data, $triage_data, $mvtid);
@@ -248,6 +255,64 @@ class Queue extends BASE_Controller
             redirect('queue/myqueue');
         }
         
+    }
+
+    function updateTriage(int $id) //update from Admin 
+    {
+        $forminput = $this->input->post();
+
+        $data = ['weight' => $forminput['weight'], 'height' => $forminput['height'], 'temperature' => $forminput['temperature'], 'blood_pressure' => $forminput['blood_pressure'], 'spo2' => $forminput['spo2'], 'rsb' => $forminput['rsb'], 'rsb_reading' => $forminput['rsb_reading'], 'resp_rate' => $forminput['resp_rate'], 'ticket_id' => $forminput['ticket_id']];
+
+        //var_dump($forminput[])
+
+        $inserted = $this->queue_model->update_triage($id, $data);
+        if ($inserted > 0) {
+            $this->session->set_flashdata('success-msg', 'Success');
+        }else{
+            $this->session->set_flashdata('error-msg', 'Err! Failed try Again');
+        }
+        redirect('queue/consultation_send/'.$forminput['ticket_id'].'/'.$forminput['mvtid']);
+    }
+
+    function update_triage_data(int $id) //update from Triage 
+    {
+        $forminput = $this->input->post();
+        // $consultation_dpt = $this->dpt_byActivity(2);
+        $arrindex = array_keys($forminput);
+        if($forminput['pharma_direct'] == "yes"){
+          $medicine = [];
+         foreach ($arrindex as $key) {
+                // echo substr($key, 0,8);
+                if (substr($key, 0, 8) == 'medicine') {
+                    $medicine[] = explode('_', $key)[1];
+                }
+
+            }
+            $consultation_dpt = $this->dpt_byActivity(11);  
+            $activity = 11;
+        }else{
+            $consultation_dpt = $this->dpt_byActivity(2);
+            $activity = 2;
+        }
+        
+        // var_dump($medicine);die;
+        $prevAct_update = ['status' => 'seen', 'triage_status' => '1', 'seen_by' => $this->session->userdata('user_aob')->id];
+        $triage_data = ['weight' => $forminput['weight'], 'height' => $forminput['height'], 'temperature' => $forminput['temperature'], 'blood_pressure' => $forminput['blood_pressure'], 'spo2' => $forminput['spo2'], 'rsb' => $forminput['rsb'], 'rsb_reading' => $forminput['rsb_reading'], 'resp_rate' => $forminput['resp_rate'], 'ticket_id' => $forminput['ticket_id']];
+
+        $newAct_data = ['ticket_id' => $forminput['ticket_id'], 'from_dpt' => $this->session->userdata('user_aob')->department, 'to_dpt' => $consultation_dpt, 'activity' => $activity, 'sent_by' => $this->session->userdata('user_aob')->id];
+
+        $inserted = $this->queue_model->update_triageData($prevAct_update, $newAct_data, $triage_data, $mvtid);
+        if ($inserted > 0) {
+            $this->session->set_flashdata('success-msg', 'Success!');
+        } else {
+            $this->session->set_flashdata('error-msg', 'Failed, please try again');
+        }
+        if ($forminput['pharma_direct'] == 'yes') {
+            $this->session->set_userdata('medicine', $medicine);
+            redirect('queue/prescribe/' . $forminput['ticket_id']);
+        }else{
+            redirect('queue/myqueue');
+        }
     }
 
     function create()
@@ -678,7 +743,11 @@ class Queue extends BASE_Controller
         $i = 0;
         foreach ($services as $one){
             $onecost = $cost[$i];
-            $this->db->insert('ticket_misc_cost',['ticket_id' => $forminput['ticket_id'],'cost_name' => $one, 'amount' => $onecost]);
+            $this->db->insert('ticket_misc_cost',[
+                'ticket_id' => $forminput['ticket_id'],
+                'cost_name' => $one, 
+                'amount' => $onecost
+            ]);
             $i++;
         }
         $this->db->where('id',$forminput['ticket_id']);
@@ -946,8 +1015,16 @@ class Queue extends BASE_Controller
             // sent to maternity            
             $prevAct_update = ['status' => 'seen', 'seen_by' => $this->session->userdata('user_aob')->id];
             $newAct_data = ['ticket_id' => $id, 'from_dpt' => $this->session->userdata('user_aob')->department, 'to_dpt' => $to_dpt, 'activity' => $forminput['activity'], 'patient_notes' => $forminput['notes'], 'sent_by' => $this->session->userdata('user_aob')->id];
+         
+        }
 
-            
+        //send back to triage
+        if ($forminput['activity'] == '3') {
+            $to_dpt = $this->dpt_byActivity(3);
+            // sent to maternity            
+            $prevAct_update = ['status' => 'seen', 'seen_by' => $this->session->userdata('user_aob')->id];
+            $newAct_data = ['ticket_id' => $id, 'from_dpt' => $this->session->userdata('user_aob')->department, 'to_dpt' => $to_dpt, 'activity' => $forminput['activity'], 'patient_notes' => $forminput['notes'], 'sent_by' => $this->session->userdata('user_aob')->id];
+         
         }
 
         $inserted = $this->queue_model->consultation_insert_ticket($newAct_data, $prevAct_update, $mvtid);
@@ -1638,13 +1715,37 @@ class Queue extends BASE_Controller
         $this->data['ticket_id'] = $tickid;
         $this->data['phistory'] = $this->payments_model->fetch($tickid);
         $this->data['totcons'] = $this->queue_model->fetch_ticket($tickid)['cons_fee'];
+        $this->data['totwaiver'] = $this->queue_model->fetch_ticket($tickid)['waiver_amount'];
         $this->data['miscdetails']  = $this->queue_model->mother_child_total($tickid);
-        $this->data['totrsb'] = $this->queue_model->ticket_triage($tickid);
-
-        
+        $this->data['totrsb'] = $this->queue_model->ticket_triage($tickid);     
 
         $this->data['pg_title'] = "Select";
         $this->data['page_content'] = 'queue/payment_details';
+        $this->load->view('layout/template', $this->data);
+    }
+
+    function billWaver(int $tickid, int $mvtid)
+    {
+        //var_dump($tickid);die;
+        $this->data['ticket_details'] = $this->queue_model->fetch_mvt($mvtid);
+        $mvtdetails = $this->data['ticket_details'];
+
+        $ticketdata = $this->queue_model->fetch_ticket($tickid);
+        $this->data['waiver'] = $this->queue_model->fetch_ticket($tickid)[0];
+
+        $this->data['patientdetails'] = $this->patients_model->fetch_byId($ticketdata['patient_id'])[0];
+        $this->data['labdetails'] = $this->queue_model->ticket_labdetails_p($tickid);
+        $this->data['radiologydetails'] = $this->queue_model->ticket_radiologydetails_p($tickid);
+        $this->data['medicationdetails'] = $this->queue_model->ticket_prescription_p($tickid);
+        $this->data['ticket_id'] = $tickid;
+        $this->data['phistory'] = $this->payments_model->fetch($tickid);
+        $this->data['totcons'] = $this->queue_model->fetch_ticket($tickid)['cons_fee'];
+        $this->data['totwaiver'] = $this->queue_model->fetch_ticket($tickid)['waiver_amount'];
+        $this->data['miscdetails']  = $this->queue_model->mother_child_total($tickid);
+        $this->data['totrsb'] = $this->queue_model->ticket_triage($tickid);   
+
+        $this->data['pg_title'] = "Select";
+        $this->data['page_content'] = 'queue/billwaver';
         $this->load->view('layout/template', $this->data);
     }
 
@@ -1776,15 +1877,18 @@ class Queue extends BASE_Controller
         $this->load->view('layout/template', $this->data);
     }
 
-    function delete_medication(int $id, int $mvtid, int $tickid,int $status)
+    function delete_medication(int $id,  int $tickid, int $mvtid,int $status)
     {
+        $meddata = $this->queue_model->fetch_medications($id);
+        $medid = $meddata['medicine_id'];
+        //var_dump($medid);die;
         $inserted = $this->queue_model->delete_medication($id);
         if ($inserted > 0) {
             $this->session->set_flashdata('success-msg', 'Success!');
         } else {
             $this->session->set_flashdata('error-msg', 'Failed, please try again');
         }
-        redirect('queue/givemedicine/'.$mvtid.'/'.$tickid.'/'.$status);
+        redirect('queue/givemedicine/'.$tickid.'/'.$mvtid.'/'.$status);
     }
 
     function pharmacyclose(int $mvtid)

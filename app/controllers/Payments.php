@@ -64,14 +64,48 @@ class Payments extends BASE_Controller
     function add()
     {
         $forminput = $this->input->post();
-//        var_dump($forminput);
-        $inserted = $this->payments_model->add($forminput);
+        //$totamount = 0;
+
+        $modes = $forminput['mode'];
+        $amount = $forminput['amount'];
+        //var_dump($amount);die;
+        $i = 0;
+        foreach ($modes as $key){
+
+            $oneamount = $amount[$i];
+
+            $this->db->insert('ticket_payments', ['ticket_id' => $forminput['ticket_id'], 'mode' => $key, 'amount' => $oneamount, 'transaction_id' => $forminput['transaction_id'], 'phone_no' => $forminput['phone_no'], 'confirmation_code' => $forminput['confirmation_code'], 'insurance_company' => $forminput['insurance_company'], 'card_no' => $forminput['card_no']]);
+            $i++;
+        }
+
+        $tickid = $forminput['ticket_id'];
+        //var_dump($tickid);die;
+        $patientdata = $this->payments_model->fetch_patientTicket($tickid);
+        $patient_id = $patientdata['patient_id'];
+        //var_dump($patient_id);die;
+
+        $inserted = $this->db->affected_rows();
         if ($inserted > 0) {
             $this->session->set_flashdata('success-msg', 'Success!');
         } else {
             $this->session->set_flashdata('error-msg', 'Failed, please try again');
         }
         redirect('queue/pmt_details/'.$forminput["ticket_id"].'/0');
+    }
+
+    function addWaiver()
+    {
+        $forminput = $this->input->post();
+
+        //var_dump($forminput);die;
+
+        $inserted = $this->payments_model->update_waiver($forminput);
+        if ($inserted > 0) {
+            $this->session->set_flashdata('success-msg', 'Success!');
+        } else {
+            $this->session->set_flashdata('error-msg', 'Failed, please try again');
+        }
+        redirect('queue/billwaver/'.$forminput["ticket_id"].'/0');
     }
     function delete(int $id,int $tickid)
     {
@@ -135,15 +169,18 @@ class Payments extends BASE_Controller
         foreach ($phistory as $one){
             $totpaid += $one['amount'];
         }
-
+        
+        //var_dump($totpaid);die;
+        
         $data['totpaid'] = $totpaid;
         //$data['discount'] = $discgiven;
         $data['ticketdetails'] = $this->queue_model->ticket_details($tickid);
         $data['receipt'] = $this->payments_model->fetchbyreceipt($id);
         $totcons = $this->queue_model->ticket_details($tickid)['cons_fee'];
+        $totwaiver = $this->queue_model->ticket_details($tickid)['waiver_amount'];
         $data['totmisc'] = $totmisc;
-        $data['total'] = ($totrad + $totlab + $totmed + $totcons + $totmisc + $totrsb) - $discgiven;
-//        echo $this->data['total'];die;
+        $data['total'] = $totrad + $totlab + $totmed + $totcons + $totmisc + $totrsb - $totwaiver;
+        
         // boost the memory limit if it's low ;)
         ini_set('memory_limit', '64M');
         // load library
@@ -211,6 +248,7 @@ class Payments extends BASE_Controller
             $totpaid += $one['amount'];
         }
 
+        $data['totpaid'] = $totpaid;
         $data['ticketdetails'] = $this->queue_model->ticket_details($tickid);
         $data['totpaid'] = $totpaid;
         $data['totmed'] = $totmed;
@@ -220,9 +258,11 @@ class Payments extends BASE_Controller
         $data['miscdetails'] = $miscdetails;
         $data['totrsb'] = $totrsb;
         $data['totcons'] = $this->queue_model->ticket_details($tickid)['cons_fee'];
+        $data['totwaiver'] = $this->queue_model->ticket_details($tickid)['waiver_amount'];
 
         $data['invoice'] = $this->queue_model->ticket_details($tickid);
 
+        // $data['total'] = ($totrad + $totlab + $totmed + $data['totcons'] + $totmisc + $totrsb) - ($totpaid+$data['totwaiver']);
         $data['total'] = $totrad + $totlab + $totmed + $data['totcons'] + $totmisc + $totrsb;
 //        echo $this->data['total'];die;
         // boost the memory limit if it's low ;)

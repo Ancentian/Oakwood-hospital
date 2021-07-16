@@ -85,19 +85,22 @@ class History extends BASE_Controller
         $totpaid = 0;
         $miscdetails = $this->queue_model->mother_child_total($tickid);
         $totmisc = 0;
+        $rsbpayment = $this->queue_model->ticket_triage($tickid);
+        $totrsb = $rsbpayment['rsb'];
+        //var_dump($totrsb);die;
         foreach ($miscdetails as $one) {
             $totmisc += $one['amount'];
         }
 
-        foreach ($labdetails_t as $labdetail) {
+        foreach ($labdetails as $labdetail) {
             $totlab += $labdetail['cost'];
         }
 
-        foreach ($medicationdetails_t as $key){
+        foreach ($medicationdetails as $key){
             $totmed += ($key['units'] * $key['cost']);
         }
 
-        foreach($radiologydetails_t as $key){
+        foreach($radiologydetails as $key){
             $totrad += $key['cost'];
         }
 
@@ -107,8 +110,10 @@ class History extends BASE_Controller
             $totpaid += $one['amount'];
         }
 
-        $totcons = $this->queue_model->ticket_details($tickid)['cons_fee'];
-        $this->data['totaldue'] = $totrad + $totlab + $totmed + $totcons-$totpaid + $totmisc;
+        $data['totpaid'] = $totpaid;
+        $data['totcons'] = $this->queue_model->ticket_details($tickid)['cons_fee'];
+        $data['totwaiver'] = $this->queue_model->ticket_details($tickid)['waiver_amount'];
+        $this->data['totaldue'] = ($totrad + $totlab + $totmed + $totcons + $totmisc+$totrsb)-($totpaid+$data['waiver_amount']);
         $ticket_details = $this->queue_model->ticket_details($tickid); 
         $this->data['ticket_details'] = $this->queue_model->fetch_mvt($mvtid);
         $this->data['anc_details'] = $this->queue_model->fetch_anc_details($ticket_details['patient_id']);
@@ -117,11 +122,14 @@ class History extends BASE_Controller
         // $this->data['anc_details'] = $this->queue_model->ticket_anc_details($tickid);
         $mvtdetails = $this->data['ticket_details'];
 
+        $rsbpayment = $this->queue_model->ticket_triage($tickid);
+        $totrsb = $rsbpayment['rsb'];
+
         $ticketdata = $this->queue_model->fetch_ticket($tickid);
 
         $data['patientdetails'] = $this->patients_model->fetch_byId($ticketdata['patient_id'])[0];
-        $data['labdetails'] = $this->queue_model->ticket_labdetails($tickid);
-        $data['radiologydetails'] = $this->queue_model->ticket_radiologydetails($tickid);
+        $data['labdetails'] = $this->queue_model->ticket_labdetails_p($tickid);
+        $data['radiologydetails'] = $this->queue_model->ticket_radiologydetails_p($tickid);
         $data['triagedetails'] = $this->queue_model->ticket_triage($tickid);
         $data['admissiondetails'] = $this->queue_model->ticket_admission($tickid);
         $data['diagnosisdetails'] = $this->queue_model->ticket_diagnosis($tickid);
@@ -133,6 +141,7 @@ class History extends BASE_Controller
         $data['costs'] = $this->inpatient_model->fetch_costs($tickid);
         $data['nursing_care'] = $this->inpatient_model->fetch_nursingCare($tickid);
         $data['ticket_id'] = $tickid;
+        $data['totrsb'] = $totrsb;
         
 
         // boost the memory limit if it's low ;)
@@ -163,5 +172,19 @@ class History extends BASE_Controller
         }
 
         unlink('userfiles/pos_temp/' . $data['qrc']);
+    }
+
+    function deleteTicket($id)
+    {
+        $ptdata = $this->history_model->fetch_ticketById($id);
+        $patient_id = $ptdata['patient_id'];
+        //var_dump($patient_id);die;
+        $inserted = $this->history_model->deleteTicket($id);
+       if ($inserted > 0) {
+        $this->session->set_flashdata('success-msg', 'Ticket Delete Successfully');
+       }else{
+        $this->session->set_flashdata('error-msg', 'Failed! Try again!');
+       }
+       return redirect('history/patient_history/'. $patient_id);
     }
 }

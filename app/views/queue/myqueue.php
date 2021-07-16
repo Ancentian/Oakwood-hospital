@@ -156,7 +156,7 @@
                                     <?php $i = 1;
                                     foreach ($outgoing as $one) {
                                         ?>
-                                        <tr>
+                                        <tr style="<?php if($one['from_dpt'] == "4" && $one['to_dpt'] == "24"){ ?>background-color: yellow;<?php } ?>">
                                             <th scope="row"><?php echo $i; ?></th>
                                             <td><?php echo str_pad( $one['pid'], 4, "0", STR_PAD_LEFT ); ?></td>
                                             <td><?php echo $one['pname']; ?></td>
@@ -169,7 +169,12 @@
                                                             class="badge badge-success"><small>View</small></span></a>
                                             </td>
                                             <td>
-
+                                                <?php if($one['from_dpt'] == '4' && $one['to_dpt'] == '24') {?>
+                                                
+                                                    <a href="<?php echo base_url(); ?>queue/givemedicine/<?php echo $one['ticket_id'] . '/' . $one['mvtid']. '/' . $one['is_direct']; ?>"><i
+                                                                class="fa fa-plus-circle" aria-hidden="true"
+                                                                title="Give medicine" style="font-size: 24px;"></i></a>
+                                                <?php } ?>
                                             </td>
                                             </td>
                                         </tr>
